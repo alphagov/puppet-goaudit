@@ -1,0 +1,15 @@
+{
+  "name": "alphagov-goaudit",
+  "version": "0.1.0",
+  "author": "alphagov",
+  "summary": "Manage go-audit",
+  "license": "MIT",
+  "source": "https://github.com/alphagov/puppet-goaudit",
+  "project_page": "https://github.com/alphagov/puppet-goaudit",
+  "issues_url": "https://github.com/alphagov/puppet-goaudit/issues",
+  "dependencies": [
+    {"name":"puppetlabs-stdlib","version_requirement":">= 1.0.0"}
+  ],
+  "data_provider": null
+}
+
