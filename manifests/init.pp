@@ -42,7 +42,24 @@
 #
 # Copyright 2017 Your name here, unless otherwise noted.
 #
-class goaudit {
+class goaudit (
+  $package_name   = $goaudit::params::package_name,
+  $package_ensure = $goaudit::params::package_ensure,
+  $config_file    = $goaudit::params::config_file,
+  $service_name   = $goaudit::params::service_name,
+  $service_ensure = $goaudit::params::service_ensure,
+) inherits goaudit::params {
 
+  validate_string($package_name)
+  validate_string($package_ensure)
+  validate_absolute_path($config_file)
+  validate_string($service_name)
+  validate_string($service_ensure)
+
+  anchor { 'goaudit::begin': } ->
+  class { '::goaudit::install': } ->
+  class { '::goaudit::config': } ~>
+  class { '::goaudit::service': } ->
+  anchor { 'goaudit::end': }
 
 }
