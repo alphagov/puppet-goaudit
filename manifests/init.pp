@@ -47,6 +47,7 @@ class goaudit (
   $package_ensure           = $goaudit::params::package_ensure,
   $config_file              = $goaudit::params::config_file,
   $service_name             = $goaudit::params::service_name,
+  $service_enable           = $goaudit::params::service_enable,
   $service_ensure           = $goaudit::params::service_ensure,
   $events_min               = $goaudit::params::events_min,
   $events_max               = $goaudit::params::events_max,
@@ -90,7 +91,7 @@ class goaudit (
     'tcp', 'tcp4', 'tcp6', 'udp', 'udp4', 'udp6', 'ip',
     'ip4', 'ip6', 'unix', 'unixgram', 'unixpacket',
   ]
-  if (! $output_syslog_network in $valid_socket_types) {
+  if ! ($output_syslog_network in $valid_socket_types) {
     fail(
       sprintf('output_syslog_network must be one of %s',
         join($valid_socket_types, ', ')
