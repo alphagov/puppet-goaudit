@@ -9,20 +9,21 @@
 
 events:
   # Minimum event type to capture, default 1300
-  min: <%= scope['::goaudit::events_min'] %>
+  min: <%= @data['main']['events']['min'] %>
+
   # Maximum event type to capture, default 1399
-  max: <%= scope['::goaudit::events_max'] %>
+  max: <%= @data['main']['events']['max'] %>
 
 # Configure message sequence tracking
 message_tracking:
   # Track messages and identify if we missed any, default true
-  enabled: <%= scope['::goaudit::message_tracking_enabled'] %>
+  enabled: <%= @data['main']['message_tracking']['enabled'] %>
 
   # Log out of orderness, these messages typically signify an overloading system, default false
-  log_out_of_order: <%= scope['::goaudit::message_tracking_log_ooo'] %>
+  log_out_of_order: <%= @data['main']['message_tracking']['log_out_of_order'] %>
 
   # Maximum out of orderness before a missed sequence is presumed dropped, default 500
-  max_out_of_order: <%= scope['::goaudit::message_tracking_max_ooo'] %>
+  max_out_of_order: <%= @data['main']['message_tracking']['max_out_of_order'] %>
 
 # Configure where to output audit events
 # Only 1 output can be active at a given time
@@ -30,49 +31,49 @@ output:
   # Writes to stdout
   # All program status logging will be moved to stderr
   stdout:
-    enabled: <%= scope['::goaudit::stdout_enabled'] %>
+    enabled: <%= @data['main']['output']['stdout']['enabled'] %>
 
     # Total number of attempts to write a line before considering giving up
     # If a write fails go-audit will sleep for 1 second before retrying
     # Default is 3
-    attempts: <%= scope['::goaudit::stdout_attempts'] %>
+    attempts: <%= @data['main']['output']['stdout']['attempts'] %>
 
   # Writes logs to syslog
   syslog:
-    enabled: <%= scope['::goaudit::output_syslog_enabled'] %>
-    attempts: <%= scope['::goaudit::output_syslog_attempts'] %>
+    enabled: <%= @data['main']['output']['syslog']['enabled'] %>
+    attempts: <%= @data['main']['output']['syslog']['attempts'] %>
 
     # Configure the type of socket this should be, default is unixgram
     # This maps to `network` in golangs net.Dial: https://golang.org/pkg/net/#Dial
-    network: "<%= scope['::goaudit::output_syslog_network'] %>"
+    network: "<%= @data['main']['output']['syslog']['network'] %>"
 
     # Set the remote address to connect to, this can be a path or an ip address
     # This maps to `address` in golangs net.Dial: https://golang.org/pkg/net/#Dial
-    address: "<%= scope['::goaudit::output_syslog_address'] %>"
+    address: "<%= @data['main']['output']['syslog']['address'] %>"
 
     # Sets the facility and severity for all events. See the table below for help
     # The default is 132 which maps to local0 | warn
-    priority: <%= scope['::goaudit::output_syslog_priority'] %> # local0 | emerg
+    priority: <%= @data['main']['output']['syslog']['priority'] %> # local0 | emerg
 
     # Typically the name of the program generating the message. The PID is of the process is appended for you: [1233]
     # Default value is "go-audit"
-    tag: "<%= scope['::goaudit::output_syslog_tag'] %>"
+    tag: "<%= @data['main']['output']['syslog']['tag'] %>"
 
   # Appends logs to a file
   file:
-    enabled: <%= scope['::goaudit::output_file_enabled'] %>
-    attempts: <%= scope['::goaudit::output_file_attempts'] %>
+    enabled: <%= @data['main']['output']['file']['enabled'] %>
+    attempts: <%= @data['main']['output']['file']['attempts'] %>
 
     # Path of the file to write lines to
     # The actual file will be created if it is missing but make sure the parent directory exists
-    path: "<%= scope['::goaudit::output_file_path'] %>"
+    path: "<%= @data['main']['output']['file']['path'] %>"
 
     # Octal file mode for the log file, make sure to always have a leading 0
-    mode: "<%= scope['::goaudit::output_file_mode'] %>"
+    mode: "<%= @data['main']['output']['file']['mode'] %>"
 
     # User and group that should own the log file
-    user: "<%= scope['::goaudit::output_file_user'] %>"
-    group: "<%= scope['::goaudit::output_file_group'] %>"
+    user: "<%= @data['main']['output']['file']['user'] %>"
+    group: "<%= @data['main']['output']['file']['group'] %>"
 
 # Configure logging, only stdout and stderr are used.
 log:
@@ -87,21 +88,5 @@ log:
   # LUTC          = 32 // if Ldate or Ltime is set, use UTC rather than the local time zone
   #
   # See also: https://golang.org/pkg/log/#pkg-constants
-  flags: <%= scope['::goaudit::log_flags'] %>
+  flags: <%= @data['main']['log']['flags'] %>
 
-rules:
-  # Watch all 64 bit program executions
-  - -a exit,always -F arch=b64 -S execve
-  # Watch all 32 bit program executions
-  - -a exit,always -F arch=b32 -S execve
-  # Enable kernel auditing (required if not done via the "audit" kernel boot parameter)
-  # You can also use this to lock the rules. Locking requires a reboot to modify the ruleset.
-  # This should be the last rule in the chain.
-  - -e 1
-
-# If kaudit filtering isn't powerful enough you can use the following filter mechanism
-filters:
-  # Each filter consists of exactly 3 parts
-  - syscall: 49 # The syscall id of the message group (a single log line from go-audit), to test against the regex
-    message_type: 1306 # The message type identifier containing the data to test against the regex
-    regex: saddr=(10..|0A..) # The regex to test against the message specific message types data
