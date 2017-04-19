@@ -127,3 +127,37 @@ else
 end
 %>
 
+<%=
+if @data['filters'] then
+  # initialise a line buffer array to build up the output for this template
+  # block in a line-wise fashion
+  output_lines = []
+
+  @data['filters'].each do |filter|
+    # Convert multi-line string to YAML comment block
+    if filter['comment'] != :undef then
+      output_lines.push(
+        filter['comment'].split("\n").map { |line|
+          "# #{line}"
+        }
+      )
+    end
+
+    # Express filter as YAML hash
+    output_lines.push("- syscall: #{filter['syscall']}")
+    output_lines.push("  message_type: #{filter['message_type']}")
+    output_lines.push("  regex: \"#{filter['regex']}\"")
+  end
+
+  output_lines.flatten!
+  # Go back over our output buffer and indent by two spaces
+  output_lines.map! { |line| "  #{line}" }
+
+  # Name the array and insert the header
+  output_lines.unshift("filters:")
+  output_lines.join("\n")
+else
+  "filters: []"
+end
+%>
+
