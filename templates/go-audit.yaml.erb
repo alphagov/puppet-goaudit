@@ -90,3 +90,40 @@ log:
   # See also: https://golang.org/pkg/log/#pkg-constants
   flags: <%= @data['main']['log']['flags'] %>
 
+<%=
+if @data['rules'] then
+  # initialise a line buffer array to build up the output for this template
+  # block in a line-wise fashion
+  output_lines = []
+
+  @data['rules'].each do |rule|
+    # Convert multi-line string to YAML comment block
+    if rule['comment'] != :undef then
+      output_lines.push(
+        rule['comment'].split("\n").map { |line|
+          "# #{line}"
+        }
+      )
+    end
+
+    # Express rules as YAML array elements
+    output_lines.push(
+      [ rule['content'] ].flatten.map { |line|
+        line.chomp!
+        "- \"#{line}\""
+      }
+    )
+  end
+
+  output_lines.flatten!
+  # Go back over our output buffer and indent by two spaces
+  output_lines.map! { |line| "  #{line}" }
+
+  # Name the array and insert the header
+  output_lines.unshift("rules:")
+  output_lines.join("\n")
+else
+  "rules: []"
+end
+%>
+
