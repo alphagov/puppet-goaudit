@@ -109,7 +109,11 @@ if @data['rules'] then
     # Express rules as YAML array elements
     output_lines.push(
       [ rule['content'] ].flatten.map { |line|
-        line.chomp!
+        if line != :undef then
+          line.chomp!
+        else
+          line = '# UNDEFINED'
+        end
         "- \"#{line}\""
       }
     )
