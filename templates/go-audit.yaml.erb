@@ -112,7 +112,7 @@ if @data['rules'] then
         if line != :undef then
           line.chomp!
         else
-          line = '# UNDEFINED'
+          line = ''
         end
         "- \"#{line}\""
       }
