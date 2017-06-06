@@ -98,7 +98,7 @@ class goaudit (
       )
     )
   }
-  validate_absolute_path($output_syslog_address)
+  validate_string($output_syslog_address)
   validate_integer($output_syslog_priority)
   validate_string($output_syslog_tag)
 
