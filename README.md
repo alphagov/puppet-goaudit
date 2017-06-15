@@ -14,70 +14,324 @@
 
 ## Description
 
-Start with a one- or two-sentence summary of what the module does and/or what
-problem it solves. This is your 30-second elevator pitch for your module.
-Consider including OS/Puppet version it works with.
-
-You can give more descriptive information in a second paragraph. This paragraph
-should answer the questions: "What does this module *do*?" and "Why would I use
-it?" If your module has a range of functionality (installation, configuration,
-management, etc.), this is the time to mention it.
+This module allows you to manage [Go-Audit](https://github.com/slackhq/go-audit) using Puppet.
 
 ## Setup
 
-### What goaudit affects **OPTIONAL**
+### What goaudit affects
 
-If it's obvious what your module touches, you can skip this section. For
-example, folks can probably figure out that your mysql_instance module affects
-their MySQL instances.
+The module manages package, service and configuration files for Go-Audit.
 
-If there's more that they should know about, though, this is the place to mention:
+The package name is assumed to be `goaudit`, via the default package provider for your system. It is
+assumed that such a package exists. This assumption may not hold true for your platform as-is, and
+you may need to provide such a package yourself. The module does not contain logic for installing
+Go-Audit by any other method.
 
-* A list of files, packages, services, or operations that the module will alter,
-  impact, or execute.
-* Dependencies that your module automatically installs.
-* Warnings or other important notices.
+### Setup Requirements
 
-### Setup Requirements **OPTIONAL**
-
-If your module requires anything extra before setting up (pluginsync enabled,
-etc.), mention it here.
-
-If your most recent release breaks compatibility or requires particular steps
-for upgrading, you might want to include an additional "Upgrading" section
-here.
+The module depends on the [Datacat](https://github.com/richardc/puppet-datacat) module for composing
+the Go-Audit YAML config file.
 
 ### Beginning with goaudit
 
-The very basic steps needed for a user to get the module up and running. This
-can include setup steps, if necessary, or it can be an example of the most
-basic use of the module.
+To install Go-Audit with a default configuration:
+
+```
+class { '::goaudit': }
+```
 
 ## Usage
 
-This section is where you describe how to customize, configure, and do the
-fancy stuff with your module here. It's especially helpful if you include usage
-examples and code samples for doing things with your module.
+### Manage rules
+
+```
+goaudit::rule { 'TLS private key access' :
+  order   => 50,
+  comment => 'Reads, writes and attribute changes on TLS private keys',
+  content => [
+    '-w /etc/ssl/private/foo.key -p rwa -k tls-key-access',
+    '-w /etc/ssl/private/bar.key -p rwa -k tls-key-access',
+  ]
+}
+```
+
+### Manage filters
+
+```
+goaudit::filter { 'reduce the number of connect syscall events being logged':
+  syscall      => 49,      # bind
+  message_type => 1306,    # AUDIT_SOCKADDR
+  # 0200....7F - ipv4 on any port to 127.x.x.x
+  # 01 - local/unix domain sockets
+  regex        => 'saddr=(0200....7F|01)'
+}
+
+```
 
 ## Reference
 
-Here, include a complete list of your module's classes, types, providers,
-facts, along with the parameters for each. Users refer to this section (thus
-the name "Reference") to find specific details; most users don't read it per
-se.
+### Classes
 
-## Limitations
+#### `goaudit`
 
-This is where you list OS compatibility, version compatibility, etc. If there
-are Known Issues, you might want to include them under their own heading here.
+##### `package_name`
 
-## Development
+Sets the name of the Go-Audit package.
 
-Since your module is awesome, other users will want to play with it. Let them
-know what the ground rules for contributing are.
+Default value: `go-audit`.
 
-## Release Notes/Contributors/Etc. **Optional**
+##### `package_ensure`
 
-If you aren't using changelog, put your release notes here (though you should
-consider using changelog). You can also add any additional sections you feel
-are necessary or important to include here. Please use the `## ` header.
+Whether the Go-Audit package resource should be present.
+
+Valid values: `present`, `absent`.
+
+Default value: `present`.
+
+##### `config_file`
+
+The filesystem path to the Go-Audit config file.
+
+Valid values: an absolute file path on the target system.
+
+Default value: `/etc/go-audit.yaml`.
+
+##### `service_name`
+
+Overrides the Go-Audit service name. May be required depending on what the package provides.
+
+Default value: `go-audit`
+
+##### `service_enable`
+
+Specifies whether the service should be enabled.
+
+Valid values: `true`, `false`.
+
+Default value: `true`.
+
+##### `service_ensure`
+
+The service state that should be ensured.
+
+Valid values: `stopped`, `running`.
+
+Default value: `running`.
+
+##### `events_min`
+
+Lower bound of range of audit type codes of events to capture.
+
+Default value: `1300`
+
+##### `events_max`
+
+Upper bound of range of audit type codes of events to capture.
+
+Default value: `1399`
+
+##### `message_tracking_enabled`
+
+Whether to track messages and identify if any were missed.
+
+Valid values: `true`, `false`.
+
+Default value: `true`
+
+##### `message_tracking_log_ooo`
+
+Whether to log out-of-orderness. These messages typically signify an overloading system.
+
+Valid values: `true`, `false`.
+
+Default value: `false`
+
+##### `message_tracking_max_ooo`
+
+Maximum out of orderness before a missed sequence is presumed dropped.
+
+Default value: `500`
+
+##### `output_stdout_enabled`
+
+Whether to log Go-Audit program output to stdout.
+
+Valid values: `true`, `false`.
+
+Default value: `true`
+
+##### `output_stdout_attempts`
+
+Total number of attempts to write to stdout before considering giving up.
+If a write fails, Go-Audit will sleep for 1 second before retrying.
+
+Valid values: positive integers
+
+Default value: `3`
+
+##### `output_syslog_enabled`
+
+Whether to log Go-Audit program output to syslog.
+
+Valid values: `true`, `false`.
+
+Default value: `false`
+
+##### `output_syslog_attempts`
+
+Total number of attempts to write to Syslog before considering giving up.
+If a write fails, Go-Audit will sleep for 1 second before retrying.
+
+Valid values: positive integers
+
+Default value: `5`
+
+##### `output_syslog_network`
+
+The type of socket over which to communicate with Syslog.
+
+Valid values: see `network` in Golang's `net.Dial`: https://golang.org/pkg/net/#Dial
+
+Default value: `unixgram`
+
+##### `output_syslog_address`
+
+The remote address over which to connect to Syslog. Can be a filesystem path, IP address, hostname.
+
+Valid values: see `address` in Golang's `net.Dial`: https://golang.org/pkg/net/#Dial
+
+Default value: `/dev/log`
+
+##### `output_syslog_priority`
+
+Sets the facility and severity for all Syslog events generated by Go-Audit.
+
+Default value: `129` (maps to `local0 | emerg`)
+
+See any Syslog priority matrix reference material for details on calculating this value, e.g.
+https://en.wikipedia.org/wiki/Syslog
+
+##### `output_syslog_tag`
+
+A tag to apply to Syslog messages generated by Go-Audit. Typically this is the name of the program
+generating the message. The PID of the process is automatically appended.
+
+Default value: `go-audit`
+
+##### `output_file_enabled`
+
+Whether to log Go-Audit program output to a logfile.
+
+Valid values: `true`, `false`.
+
+Default value: `false`.
+
+##### `output_file_attempts`
+
+Total number of attempts to write to the logfile before considering giving up.  If a write fails,
+Go-Audit will sleep for 1 second before retrying.
+
+Valid values: positive integers
+
+Default value: `2`
+
+##### `output_file_path`
+
+The path to the logfile.
+
+Valid values: any absolute file path.
+
+Default value: `/var/log/go-audit/go-audit.log`.
+
+##### `output_file_mode`
+
+The file mode of the logfile.
+
+Valid values: any valid file mode octal expression, with leading zero.
+
+Default value: `0600`.
+
+##### `output_file_user`, `output_file_group`
+
+The user and group ownership of the logfile.
+
+Valid values: any valid user and group name on the target system.
+
+Default value: `root`.
+
+##### `log_flags`
+
+Control log file line prefixes. Add together constants defined in Golang's `log` module.
+https://golang.org/pkg/log/#pkg-constants
+
+Valid values: an integer expressing a combination of flags as defined above. 
+
+Default value: `0` (no line prefixes)
+
+### Defined Types
+
+#### `goaudit::rule`
+
+Adds a rule, or multiple rules in a block, to the Go-Audit configuration. The rules will be applied
+to the kernel by Go-Audit on startup via a sequence of calls to the `auditctl` command.
+
+##### `order`
+
+An ordering hint. `goaudit::rule` resources will be sorted by their order before being applied to
+the configuration.
+
+Valid values: integers
+
+Default value: `10`
+
+##### `comment`
+
+An optional comment to prepend to the rule(s). If provided, will be rendered in the configuration as
+a YAML comment.
+
+##### `content`
+
+A rule expression (string), or an array of rule expressions. Arrays will be rendered in the
+configuration in order. See the `auditctl` documentation for valid rule expressions.
+
+#### `goaudit::filter`
+
+Adds a filter to the Go-Audit configuration.
+
+##### `order`
+
+An ordering hint. `goaudit::filter` resources will be sorted by their order before being applied to
+the configuration.
+
+Valid values: integers
+
+Default value: `10`
+
+##### `comment`
+
+An optional comment to prepend to the filter(s). If provided, will be rendered in the configuration as
+a YAML comment.
+
+##### `syscall`
+
+Required.
+
+The syscall ID of the message group (a single log line from go-audit), to test against the regex
+
+Valid values: Integers. See output of command `ausyscall --dump` for a list.
+
+##### `message_type`
+
+Required.
+
+The message type identifier containing the data to test against the regex.
+
+Valid values: integers. For a list of message types, see
+https://github.com/torvalds/linux/blob/master/include/uapi/linux/audit.h#L53.
+
+##### `regex`
+
+Required.
+
+The regex to apply to the message text.
+
