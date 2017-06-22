@@ -29,6 +29,8 @@ class goaudit::params {
 
   $log_flags = 0
 
+  $auto_enable_rule = 'enable'
+
   case $::osfamily {
     'Debian': {
       $package_name = 'go-audit'

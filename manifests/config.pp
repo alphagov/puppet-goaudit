@@ -43,6 +43,15 @@ class goaudit::config {
     },
   }
 
+  if ($::goaudit::auto_enable_rule != 'none') {
+    datacat_fragment { 'go-audit audit enable rule' :
+      target          => $::goaudit::config_file,
+      data            => {
+        'enable_rule' => $::goaudit::auto_enable_rule,
+      }
+    }
+  }
+
   datacat { $::goaudit::config_file :
     ensure   => 'file',
     owner    => 'root',
