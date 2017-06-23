@@ -69,6 +69,7 @@ class goaudit (
   $output_file_user         = $goaudit::params::output_file_user,
   $output_file_group        = $goaudit::params::output_file_group,
   $log_flags                = $goaudit::params::log_flags,
+  $auto_enable_rule         = $goaudit::params::auto_enable_rule,
 ) inherits goaudit::params {
 
   validate_string($package_name)
@@ -110,6 +111,17 @@ class goaudit (
   validate_string($output_file_group)
 
   validate_integer($log_flags)
+
+  $valid_auto_enable_rule_values = [
+    'none', 'disable', 'enable', 'lock'
+  ]
+  if ! ($auto_enable_rule in $valid_auto_enable_rule_values) {
+    fail(
+      sprintf('auto_enable_rule must be one of %s',
+        join($valid_auto_enable_rule_values, ', ')
+      )
+    )
+  }
 
   anchor { 'goaudit::begin': } ->
   class { '::goaudit::install': } ->

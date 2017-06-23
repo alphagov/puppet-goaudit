@@ -119,6 +119,22 @@ if @data['rules'] then
     )
   end
 
+  if @data['enable_rule'] then
+    case @data['enable_rule']
+    when 'disable'
+      enable_flag = 0
+    when 'enable'
+      enable_flag = 1
+    when 'lock'
+      enable_flag = 2
+    end
+
+    output_lines.push([
+      "# Auto-added by goaudit::auto_enable_rule",
+      "- -e #{enable_flag}",
+    ])
+  end
+
   output_lines.flatten!
   # Go back over our output buffer and indent by two spaces
   output_lines.map! { |line| "  #{line}" }
