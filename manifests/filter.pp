@@ -1,3 +1,4 @@
+# See README.md
 define goaudit::filter (
   $order   = 10,
   $comment = undef,

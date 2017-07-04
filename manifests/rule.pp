@@ -1,3 +1,4 @@
+# See README.md
 define goaudit::rule (
   $order   = 10,
   $comment = undef,

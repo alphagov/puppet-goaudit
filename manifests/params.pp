@@ -1,3 +1,4 @@
+# See README.md
 class goaudit::params {
   $package_ensure  = 'present'
   $service_enabled = true
