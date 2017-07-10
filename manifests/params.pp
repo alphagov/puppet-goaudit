@@ -1,8 +1,8 @@
 # See README.md
 class goaudit::params {
-  $package_ensure  = 'present'
-  $service_enabled = true
-  $service_ensure  = 'running'
+  $package_ensure = 'present'
+  $service_enable = true
+  $service_ensure = 'running'
 
   $events_min = 1300
   $events_max = 1399
