@@ -268,6 +268,29 @@ Valid values: an integer expressing a combination of flags as defined above.
 
 Default value: `0` (no line prefixes)
 
+##### `auto_enable_rule`
+
+Manages a special rule in the ruleset, which always appears at the end of the ruleset and is applied
+last, regardless of ordering hints given to rules defined by `goaudit::rule` resources.
+
+The rule tells the kernel to enable, disable, or lock the ruleset, and is applied by `auditctl -e`.
+
+When set to `enable`, the last rule in the ruleset will be `-e 1`, which tells the kernel to enable
+the flow of audit messages.
+
+When set to `disable`, the last rule in the ruleset will be `-e 0`, which tells the kernel to
+disable the flow of audit messages.
+
+When set to `lock`, the last rule in the ruleset will be `-e 2`, which tells the kernel to enable
+the flow of audit messages, and prevent any further changes to the ruleset (until the next reboot).
+
+When set to `none`, this rule is not added to the ruleset. Use this setting if you are managing this
+property through some other mechanism.
+
+Valid values: `none`, `disable`, `enable`, `lock`
+
+Default value: `enable`
+
 ### Defined Types
 
 #### `goaudit::rule`
