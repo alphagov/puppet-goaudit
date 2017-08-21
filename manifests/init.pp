@@ -70,7 +70,7 @@ class goaudit (
   validate_integer($log_flags)
 
   $valid_auto_enable_rule_values = [
-    'none', 'disable', 'enable', 'lock'
+    'none', 'disable', 'enable', 'lock',
   ]
   if ! ($auto_enable_rule in $valid_auto_enable_rule_values) {
     fail(
@@ -80,10 +80,10 @@ class goaudit (
     )
   }
 
-  anchor { 'goaudit::begin': } ->
-  class { '::goaudit::install': } ->
-  class { '::goaudit::config': } ~>
-  class { '::goaudit::service': } ->
-  anchor { 'goaudit::end': }
+  anchor { 'goaudit::begin': }
+  -> class { '::goaudit::install': }
+  -> class { '::goaudit::config': }
+  ~> class { '::goaudit::service': }
+  -> anchor { 'goaudit::end': }
 
 }
