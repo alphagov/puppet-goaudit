@@ -1,12 +1,19 @@
 {
-  "name": "alphagov-goaudit",
-  "version": "0.1.0",
-  "author": "alphagov",
+  "name": "gdsoperations-goaudit",
+  "version": "0.2.0",
+  "author": "Government Digital Service",
   "summary": "Manage go-audit",
   "license": "MIT",
-  "source": "https://github.com/alphagov/puppet-goaudit",
-  "project_page": "https://github.com/alphagov/puppet-goaudit",
-  "issues_url": "https://github.com/alphagov/puppet-goaudit/issues",
+  "source": "https://github.com/gds-operations/puppet-goaudit",
+  "project_page": "https://github.com/gds-operations/puppet-goaudit",
+  "issues_url": "https://github.com/gds-operations/puppet-goaudit/issues",
+  "tags": ["auditd", "go-audit", "goaudit"],
+  "operatingsystem_support": [
+    {
+      "operatingsystem": "Ubuntu",
+      "operatingsystemrelease": ["14.04"]
+    }
+   ],
   "dependencies": [
     {
       "name": "puppetlabs-stdlib",
