@@ -1,8 +1,8 @@
 # See README.md
 define goaudit::rule (
+  $content,
   $order   = 10,
   $comment = undef,
-  $content,
 ) {
 
   validate_integer($order)
@@ -14,16 +14,16 @@ define goaudit::rule (
   }
 
   datacat_fragment {"go-audit rule ${title}" :
-    target       => $::goaudit::config_file,
-    order        => $order,
-    data         => {
-      'rules'    => [
+    target => $::goaudit::config_file,
+    order  => $order,
+    data   => {
+      'rules' => [
         {
-          "comment" => $comment,
-          "content" => $content,
-        }
-      ]
-    }
+          'comment' => $comment,
+          'content' => $content,
+        },
+      ],
+    },
   }
 
 }
