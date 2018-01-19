@@ -1,7 +1,7 @@
 # See README.md
 define goaudit::rule (
   $content,
-  $order   = 10,
+  $order   = '10',
   $comment = undef,
 ) {
 

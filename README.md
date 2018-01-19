@@ -46,7 +46,7 @@ class { '::goaudit': }
 
 ```
 goaudit::rule { 'TLS private key access' :
-  order   => 50,
+  order   => '50',
   comment => 'Reads, writes and attribute changes on TLS private keys',
   content => [
     '-w /etc/ssl/private/foo.key -p rwa -k tls-key-access',
@@ -303,9 +303,9 @@ to the kernel by Go-Audit on startup via a sequence of calls to the `auditctl` c
 An ordering hint. `goaudit::rule` resources will be sorted by their order before being applied to
 the configuration.
 
-Valid values: integers
+Valid values: integers formatted as strings
 
-Default value: `10`
+Default value: `'10'`
 
 ##### `comment`
 
@@ -326,9 +326,9 @@ Adds a filter to the Go-Audit configuration.
 An ordering hint. `goaudit::filter` resources will be sorted by their order before being applied to
 the configuration.
 
-Valid values: integers
+Valid values: integers formatted as strings
 
-Default value: `10`
+Default value: `'10'`
 
 ##### `comment`
 

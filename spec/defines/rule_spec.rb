@@ -16,7 +16,7 @@ describe 'goaudit::rule' do
     it {
       is_expected.to contain_datacat_fragment('go-audit rule example').with({
         :target => '/etc/go-audit.yaml',
-        :order  => 10,
+        :order  => '10',
         :data   => {
           'rules' => [
             {
@@ -37,7 +37,7 @@ describe 'goaudit::rule' do
     it {
       is_expected.to contain_datacat_fragment('go-audit rule example').with({
         :target => '/etc/go-audit.yaml',
-        :order  => 10,
+        :order  => '10',
         :data   => {
           'rules' => [
             {
@@ -59,7 +59,7 @@ describe 'goaudit::rule' do
     it {
       is_expected.to contain_datacat_fragment('go-audit rule example').with({
         :target => '/etc/go-audit.yaml',
-        :order  => 10,
+        :order  => '10',
         :data   => {
           'rules' => [
             {
