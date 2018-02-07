@@ -3,7 +3,7 @@ define goaudit::filter (
   $syscall,
   $message_type,
   $regex,
-  $order   = 10,
+  $order   = '10',
   $comment = undef,
 ) {
 

@@ -10,7 +10,7 @@ describe 'goaudit::filter' do
 
   describe 'complete example' do
     let (:params) {{
-      :order        => 9,
+      :order        => '9',
       :comment      => 'rspec comment',
       :syscall      => 1234,
       :message_type => 4321,
@@ -20,7 +20,7 @@ describe 'goaudit::filter' do
     it {
       is_expected.to contain_datacat_fragment('go-audit filter example').with({
         :target => '/etc/go-audit.yaml',
-        :order  => 9,
+        :order  => '9',
         :data   => {
           'filters' => [
             {
