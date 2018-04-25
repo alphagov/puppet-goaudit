@@ -1,7 +1,7 @@
 # Private class
 class goaudit::config {
 
-  datacat_fragment { 'goaudit_config_main' :
+  datacat_fragment { 'goaudit_config_main':
     target => $::goaudit::config_file,
     data   => {
       'main'   => {
@@ -44,7 +44,7 @@ class goaudit::config {
   }
 
   if ($::goaudit::auto_enable_rule != 'none') {
-    datacat_fragment { 'go-audit audit enable rule' :
+    datacat_fragment { 'go-audit audit enable rule':
       target => $::goaudit::config_file,
       data   => {
         'enable_rule' => $::goaudit::auto_enable_rule,
@@ -52,7 +52,7 @@ class goaudit::config {
     }
   }
 
-  datacat { $::goaudit::config_file :
+  datacat { $::goaudit::config_file:
     ensure   => 'file',
     owner    => 'root',
     group    => 'root',
