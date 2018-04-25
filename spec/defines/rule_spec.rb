@@ -75,10 +75,10 @@ describe 'goaudit::rule' do
   context 'with an invalid order' do
     let (:params) {{
       :content => 'rspec',
-      :order   => 'banana',
+      :order   => 10,
     }}
 
-    it { is_expected.to raise_error(Puppet::Error, /validate_integer/) }
+    it { is_expected.to raise_error(Puppet::Error, /'order' expects a String value/) }
   end
 end
 

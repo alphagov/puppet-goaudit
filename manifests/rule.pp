@@ -1,19 +1,11 @@
 # See README.md
 define goaudit::rule (
-  $content,
-  $order   = '10',
-  $comment = undef,
+  Variant[String,Array[String]] $content,
+  String $order = '10',
+  Optional[String] $comment = undef,
 ) {
 
-  validate_integer($order)
-  if ($comment != undef) {
-    validate_string($comment)
-  }
-  if ! (is_array($content) or is_string($content)) {
-    fail('content must be a string or an array of strings')
-  }
-
-  datacat_fragment {"go-audit rule ${title}" :
+  datacat_fragment { "go-audit rule ${title}":
     target => $::goaudit::config_file,
     order  => $order,
     data   => {

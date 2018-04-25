@@ -44,7 +44,7 @@ describe 'goaudit::filter' do
         :regex        => 'regex',
       }}
 
-      it { is_expected.to raise_error(Puppet::Error, /validate_integer/) }
+      it { is_expected.to raise_error(Puppet::Error, /expects Integer/) }
     end
   end
 
@@ -55,7 +55,7 @@ describe 'goaudit::filter' do
         :regex        => 'regex',
       }}
 
-      it { is_expected.to raise_error(Puppet::Error, /Must pass syscall/) }
+      it { is_expected.to raise_error(Puppet::Error, /expects a value for parameter 'syscall'/) }
     end
 
     context 'invalid value' do
@@ -65,7 +65,7 @@ describe 'goaudit::filter' do
         :regex        => 'regex',
       }}
 
-      it { is_expected.to raise_error(Puppet::Error, /validate_integer/) }
+      it { is_expected.to raise_error(Puppet::Error, /expects Integer/) }
     end
   end
 
@@ -76,7 +76,7 @@ describe 'goaudit::filter' do
         :regex        => 'regex',
       }}
 
-      it { is_expected.to raise_error(Puppet::Error, /Must pass message_type/) }
+      it { is_expected.to raise_error(Puppet::Error, /expects a value for parameter 'message_type'/) }
     end
     
     context 'invalid value' do
@@ -86,7 +86,7 @@ describe 'goaudit::filter' do
         :regex        => 'regex',
       }}
 
-      it { is_expected.to raise_error(Puppet::Error, /validate_integer/) }
+      it { is_expected.to raise_error(Puppet::Error, /expects Integer/) }
     end
   end
 
@@ -97,7 +97,7 @@ describe 'goaudit::filter' do
         :message_type => 1234,
       }}
 
-      it { is_expected.to raise_error(Puppet::Error, /Must pass regex/) }
+      it { is_expected.to raise_error(Puppet::Error, /expects a value for parameter 'regex'/) }
     end
   end
 

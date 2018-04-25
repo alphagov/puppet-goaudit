@@ -58,7 +58,7 @@ describe 'goaudit' do
 
     context 'invalid value' do
       let (:params) {{ :output_syslog_enabled => 'not_a_bool' }}
-      it { is_expected.to raise_error(Puppet::Error, /is not a boolean/) }
+      it { is_expected.to raise_error(Puppet::Error, /'output_syslog_enabled' expects a Boolean value, got String/) }
     end
   end
 end
