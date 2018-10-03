@@ -1,6 +1,6 @@
 {
   "name": "gdsoperations-goaudit",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": "Government Digital Service",
   "summary": "Manage go-audit",
   "license": "MIT",
@@ -24,7 +24,6 @@
       "version_requirement": ">= 0.6.2 < 1.0.0"
     }
   ],
-  "data_provider": null,
   "requirements": [
     {
       "name": "puppet",
@@ -32,4 +31,3 @@
     }
   ]
 }
-
