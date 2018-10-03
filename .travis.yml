@@ -4,4 +4,4 @@ sudo: false
 # Delete dependency locks for matrix builds.
 script: bundle exec rake test
 rvm:
-  - 2.4.4
+  - 2.5.1
