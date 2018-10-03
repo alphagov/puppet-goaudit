@@ -98,7 +98,7 @@ if @data['rules'] then
 
   @data['rules'].each do |rule|
     # Convert multi-line string to YAML comment block
-    if rule['comment'] != :undef then
+    if rule['comment'] != nil then
       output_lines.push(
         rule['comment'].split("\n").map { |line|
           "# #{line}"
@@ -109,7 +109,7 @@ if @data['rules'] then
     # Express rules as YAML array elements
     output_lines.push(
       [ rule['content'] ].flatten.map { |line|
-        if line != :undef then
+        if line != nil then
           line.chomp!
         else
           line = ''
@@ -155,7 +155,7 @@ if @data['filters'] then
 
   @data['filters'].each do |filter|
     # Convert multi-line string to YAML comment block
-    if filter['comment'] != :undef then
+    if filter['comment'] != nil then
       output_lines.push(
         filter['comment'].split("\n").map { |line|
           "# #{line}"

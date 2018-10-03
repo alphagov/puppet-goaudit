@@ -20,7 +20,7 @@ describe 'goaudit::rule' do
         :data   => {
           'rules' => [
             {
-              'comment' => :undef,
+              'comment' => nil,
               'content' => 'rspec',
             }
           ]
@@ -41,7 +41,7 @@ describe 'goaudit::rule' do
         :data   => {
           'rules' => [
             {
-              'comment' => :undef,
+              'comment' => nil,
               'content' => ['rspec 1', 'rspec 2'],
             }
           ]
